@@ -1,0 +1,80 @@
+databaseChangeLog:
+  -
+#  - changeSet:
+#      id: 1
+#      author: developer
+#      changes:
+#        - createTable:
+#            tableName: authors
+#            columns:
+#              - column:
+#                  name: id
+#                  type: BIGINT
+#                  autoIncrement: true
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: external_id
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: author_name
+#                  type: VARCHAR(255)
+#
+#        - createIndex:
+#            indexName: idx_author_name
+#            tableName: authors
+#            columns:
+#              - column:
+#                  name: author_name
+
+#  - changeSet:
+#      id: 2
+#      author: developer
+#      changes:
+#        - createTable:
+#            tableName: works
+#            columns:
+#              - column:
+#                  name: id
+#                  type: BIGINT
+#                  autoIncrement: true
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#              - column:
+#                  name: external_id
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    unique: true
+#                    nullable: false
+#              - column:
+#                  name: title
+#                  type: VARCHAR(1000)
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: author_id
+#                  type: BIGINT
+#                  constraints:
+#                    nullable: false
+#                    foreignKeyName: fk_works_authors
+#                    references: authors(id)
+#                    deleteCascade: true
+#              - column:
+#                  name: created_at
+#                  type: TIMESTAMP
+#                  defaultValueComputed: CURRENT_TIMESTAMP
+#                  constraints:
+#                    nullable: false
+#        - createIndex:
+#            indexName: idx_work_author
+#            tableName: works
+#            columns:
+#              - column:
+#                  name: author_id
