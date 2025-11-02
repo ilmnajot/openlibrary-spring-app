@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpenLibraryWorkEntry {
-    private String key;          // e.g., "/works/OL45804W"
+    //key is coming as id
+    private String key;
     private String title;
 }

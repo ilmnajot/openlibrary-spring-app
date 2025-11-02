@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface WorkRepository extends JpaRepository<Work, Long>{
 
     Optional<Work> findByWorkId(String workKey);
+
+    List<Work> findAllByAuthors_AuthorId(String authorsAuthorId);
 }

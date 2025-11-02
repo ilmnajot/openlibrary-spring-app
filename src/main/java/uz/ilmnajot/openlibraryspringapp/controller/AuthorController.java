@@ -10,6 +10,8 @@ import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
 import uz.ilmnajot.openlibraryspringapp.model.response.OpenLibrarySearchResponse;
 import uz.ilmnajot.openlibraryspringapp.service.AuthorService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorController {
@@ -20,12 +22,8 @@ public class AuthorController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<OpenLibrarySearchResponse> searchAuthor(@RequestParam(value = "q") String name) {
-        try {
-            OpenLibrarySearchResponse authorResponse = this.authorService.searchAuthor(name);
-            return ResponseEntity.ok(authorResponse);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<List<AuthorResponse>> searchAuthor(@RequestParam("q") String name) {
+        List<AuthorResponse> authors = authorService.searchAuthor(name);
+        return ResponseEntity.ok(authors);
     }
 }
