@@ -1,7 +1,6 @@
 package uz.ilmnajot.openlibraryspringapp.service;
 
-import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
-import uz.ilmnajot.openlibraryspringapp.model.response.OpenLibrarySearchResponse;
+import uz.ilmnajot.openlibraryspringapp.model.AuthorResponse;
 
 import java.util.List;
 

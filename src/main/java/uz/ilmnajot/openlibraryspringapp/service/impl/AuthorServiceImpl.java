@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uz.ilmnajot.openlibraryspringapp.entity.Author;
-import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
-import uz.ilmnajot.openlibraryspringapp.model.response.OpenLibraryAuthorDoc;
-import uz.ilmnajot.openlibraryspringapp.model.response.OpenLibrarySearchResponse;
+import uz.ilmnajot.openlibraryspringapp.model.AuthorResponse;
+import uz.ilmnajot.openlibraryspringapp.model.OpenLibraryAuthorDoc;
+import uz.ilmnajot.openlibraryspringapp.model.OpenLibrarySearchResponse;
 import uz.ilmnajot.openlibraryspringapp.repository.AuthorRepository;
 import uz.ilmnajot.openlibraryspringapp.service.AuthorService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
 @Slf4j
 public class AuthorServiceImpl implements AuthorService {
@@ -26,6 +25,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Value("${openlibrary.api.base-url}")
     private String baseUrl;
+
+    public AuthorServiceImpl(RestTemplate restTemplate, AuthorRepository authorRepository) {
+        this.restTemplate = restTemplate;
+        this.authorRepository = authorRepository;
+    }
 
 
     /**

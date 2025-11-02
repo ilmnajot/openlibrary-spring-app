@@ -3,7 +3,7 @@ package uz.ilmnajot.openlibraryspringapp.mapper;
 import org.springframework.stereotype.Component;
 import uz.ilmnajot.openlibraryspringapp.entity.Work;
 import uz.ilmnajot.openlibraryspringapp.model.WorkResponse;
-import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
+import uz.ilmnajot.openlibraryspringapp.model.AuthorResponse;
 
 @Component
 public class WorkMapper {

@@ -11,7 +11,6 @@ import uz.ilmnajot.openlibraryspringapp.entity.Author;
 import uz.ilmnajot.openlibraryspringapp.entity.Work;
 import uz.ilmnajot.openlibraryspringapp.mapper.WorkMapper;
 import uz.ilmnajot.openlibraryspringapp.model.WorkResponse;
-import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
 import uz.ilmnajot.openlibraryspringapp.repository.AuthorRepository;
 import uz.ilmnajot.openlibraryspringapp.repository.WorkRepository;
 import uz.ilmnajot.openlibraryspringapp.service.WorkService;
@@ -19,7 +18,6 @@ import uz.ilmnajot.openlibraryspringapp.service.WorkService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -71,51 +69,54 @@ public class WorkServiceImpl implements WorkService {
         return "/authors/" + authorId;
     }
 
+
     @Transactional
     public List<WorkResponse> fetchAndSaveWorksFromApi(String authorId) {
         try {
-//            String apiPath = authorId + "/works/json";
-//            String url = baseUrl + apiPath;
-//            log.info("Fetching works from OpenLibrary API: {}", url);
             String normalizedAuthorId = normalizeAuthorId(authorId);
             String apiPath = normalizedAuthorId + "/works.json";
             String url = baseUrl.endsWith("/") ? baseUrl + apiPath.substring(1) : baseUrl + apiPath;
             log.info("Fetching works from OpenLibrary API: {}", url);
 
-            JsonNode response = restTemplate.getForObject(url, JsonNode.class);
-
-            if (response == null) {
-                log.warn("No response received from OpenLibrary API for author: {}", authorId);
-                return List.of();
-            }
-
-            // Get or create author
-            Author author = this.getOrCreateAuthor(authorId);
-
-
-            List<WorkResponse> results = new ArrayList<>();
-            JsonNode entries = response.get("entries");
-            if (!entries.isArray() || entries.isEmpty()) {
-                log.warn("No works found in OpenLibrary API for author: {}", authorId);
-                return List.of();
-            }
-
-            for (JsonNode entry : entries) {
-                try {
-                    Work work = this.processWorkEntry(entry, author);
-                    if (work != null) {
-                        results.add(this.workMapper.toDto(work));
-                    }
-                } catch (Exception e) {
-                    log.error("Error processing work entry", e);
+            try {
+                JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+                if (response == null) {
+                    log.warn("No response received from OpenLibrary API for author: {}", authorId);
+                    return List.of();
                 }
-            }
-            log.info("Fetched {} works from OpenLibrary API for author: {}", results.size(), authorId);
-            return results;
 
+                // Get or create author
+                Author author = this.getOrCreateAuthor(authorId);
+
+                List<WorkResponse> results = new ArrayList<>();
+                JsonNode entries = response.get("entries");
+
+                // Check if entries is null or not an array
+                if (entries == null || !entries.isArray() || entries.isEmpty()) {
+                    log.warn("No works found in OpenLibrary API for author: {}", authorId);
+                    return List.of();
+                }
+
+                for (JsonNode entry : entries) {
+                    try {
+                        Work work = this.processWorkEntry(entry, author);
+                        if (work != null) {
+                            results.add(this.workMapper.toDto(work));
+                        }
+                    } catch (Exception e) {
+                        log.error("Error processing work entry", e);
+                    }
+                }
+                log.info("Fetched {} works from OpenLibrary API for author: {}", results.size(), authorId);
+                return results;
+
+            } catch (Exception e) {
+                log.error("API connection failed: {}", e.getMessage());
+                throw new RuntimeException("API connection failed: " + e.getMessage());
+            }
         } catch (Exception e) {
-            log.error("Error fetching works from OpenLibrary", e);
-            throw new RuntimeException("Failed to fetch works", e);
+            log.error("Error fetching works from OpenLibrary: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -225,7 +226,7 @@ public class WorkServiceImpl implements WorkService {
         return authorRepository.findByAuthorId(authorId)
                 .orElseGet(() -> {
                     log.info("Author not found in local DB, fetching from OpenLibrary API: {}", authorId);
-                    Author newAuthor = fetchAuthorDetails(authorId);
+                    Author newAuthor = this.fetchAuthorDetails(authorId);
                     return authorRepository.save(newAuthor);
                 });
     }

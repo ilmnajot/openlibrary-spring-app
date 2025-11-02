@@ -1,4 +1,4 @@
-package uz.ilmnajot.openlibraryspringapp.model.response;
+package uz.ilmnajot.openlibraryspringapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -3,8 +3,6 @@ package uz.ilmnajot.openlibraryspringapp.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uz.ilmnajot.openlibraryspringapp.entity.Work;
-import uz.ilmnajot.openlibraryspringapp.model.response.AuthorResponse;
 
 import java.util.List;
 
