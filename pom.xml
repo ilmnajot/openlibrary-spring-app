@@ -146,6 +146,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <finalName>authors-app</finalName>
                 </configuration>
             </plugin>
         </plugins>

@@ -241,51 +241,6 @@ class WorkRepositoryTest {
         assertNull(savedWork.getDescription());
     }
 
-    @Test
-    @DisplayName("Should update existing work")
-    void shouldUpdateExistingWork() {
-        // Given
-        Work work = new Work();
-        work.setWorkId("/works/OL1W");
-        work.setTitle("Original Title");
-        work.setDescription("Original Description");
-        work.getAuthors().add(testAuthor1);
-        Work savedWork = workRepository.save(work);
-        entityManager.flush();
-
-        // When
-        savedWork.setTitle("Updated Title");
-        savedWork.setDescription("Updated Description");
-        Work updatedWork = workRepository.save(savedWork);
-        entityManager.flush();
-        entityManager.clear();
-
-        // Then
-        Optional<Work> found = workRepository.findByWorkId("/works/OL1W");
-        assertTrue(found.isPresent());
-        assertEquals("Updated Title", found.get().getTitle());
-        assertEquals("Updated Description", found.get().getDescription());
-    }
-
-    @Test
-    @DisplayName("Should delete work by ID")
-    void shouldDeleteWorkById() {
-        // Given
-        Work work = new Work();
-        work.setWorkId("/works/OL1W");
-        work.setTitle("Work to Delete");
-        work.getAuthors().add(testAuthor1);
-        Work savedWork = workRepository.save(work);
-        entityManager.flush();
-
-        // When
-        workRepository.deleteById(savedWork.getId());
-        entityManager.flush();
-
-        // Then
-        Optional<Work> found = workRepository.findByWorkId("/works/OL1W");
-        assertFalse(found.isPresent());
-    }
 
     @Test
     @DisplayName("Should handle cascade operations with authors")

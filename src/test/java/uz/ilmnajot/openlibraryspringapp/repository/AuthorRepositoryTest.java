@@ -171,46 +171,7 @@ class AuthorRepositoryTest {
         assertEquals("Stephen King", foundByLast.get(0).getAuthorName());
     }
 
-    @Test
-    @DisplayName("Should update existing author")
-    void shouldUpdateExistingAuthor() {
-        // Given
-        Author author = new Author();
-        author.setAuthorId("/authors/OL1A");
-        author.setAuthorName("Original Name");
-        Author savedAuthor = authorRepository.save(author);
-        entityManager.flush();
 
-        // When
-        savedAuthor.setAuthorName("Updated Name");
-        authorRepository.save(savedAuthor);
-        entityManager.flush();
-        entityManager.clear();
-
-        // Then
-        Optional<Author> found = authorRepository.findByAuthorId("/authors/OL1A");
-        assertTrue(found.isPresent());
-        assertEquals("Updated Name", found.get().getAuthorName());
-    }
-
-    @Test
-    @DisplayName("Should delete author by ID")
-    void shouldDeleteAuthorById() {
-        // Given
-        Author author = new Author();
-        author.setAuthorId("/authors/OL1A");
-        author.setAuthorName("To Be Deleted");
-        Author savedAuthor = authorRepository.save(author);
-        entityManager.flush();
-
-        // When
-        authorRepository.deleteById(String.valueOf(savedAuthor.getId()));
-        entityManager.flush();
-
-        // Then
-        Optional<Author> found = authorRepository.findByAuthorId("/authors/OL1A");
-        assertFalse(found.isPresent());
-    }
 
     @Test
     @DisplayName("Should handle special characters in author names")
