@@ -1,22 +1,23 @@
-image: maven:3.9.6-eclipse-temurin-25
-
+image: maven:3.9.4-eclipse-temurin-17
+#image: amazoncorretto:25
 pipelines:
   default:
     - step:
-        name: Build and Deploy to AWS Elastic Beanstalk
+        name: Build and Deploy to Elastic Beanstalk
         caches:
           - maven
         script:
-          - echo "Building project with JDK 25..."
+          - echo "Building Java app..."
           - mvn clean package -DskipTests
-          - echo "Zipping JAR for Elastic Beanstalk..."
-          - zip -j app.zip target/*.jar
           - echo "Deploying to AWS Elastic Beanstalk..."
-          - pipe: atlassian/aws-elasticbeanstalk-deploy:1.2.5
+        artifacts:
+          - target/*.jar
+        after-script:
+          - pipe: atlassian/aws-elasticbeanstalk-deploy:0.5.0
             variables:
               AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
               AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
               AWS_DEFAULT_REGION: "eu-north-1"
-              APPLICATION_NAME: "authors-app"
-              ENVIRONMENT_NAME: "authors-app-env"
-              ZIP_FILE: "app.zip"
+              APPLICATION_NAME: "authorsandwork-app"
+              ENVIRONMENT_NAME: "Authorsandwork-app-env"
+              ZIP_FILE: "target/authors-app.jar"
